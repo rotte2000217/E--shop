@@ -28,6 +28,11 @@ namespace WebshopServer.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUserById(long id)
         {
+            if (!User.HasClaim("Id", id.ToString()))
+            {
+                return Unauthorized();
+            }
+
             return Ok(_userService.GetUserById(id));
         }
 
@@ -40,7 +45,25 @@ namespace WebshopServer.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateUser(long id, [FromBody] UserDto userDto)
         {
+            if (!User.HasClaim("Id", id.ToString()))
+            {
+                return Unauthorized();
+            }
+
             return Ok(_userService.UpdateUser(id, userDto));
+        }
+
+        [HttpPost("login")]
+        public IActionResult LoginUser([FromBody] LoginDto loginDto)
+        {
+            string token = _userService.LoginUser(loginDto);
+            
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(token);
         }
     }
 }

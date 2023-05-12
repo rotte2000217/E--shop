@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
+using System.Text;
 using WebshopServer.Dtos;
 using WebshopServer.Infrastructure;
 using WebshopServer.Interfaces;
@@ -12,11 +16,13 @@ namespace WebshopServer.Services
 {
     public class UserService : IUserService
     {
+        private readonly IConfigurationSection _secretKey;
         private readonly WebshopDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public UserService(WebshopDbContext dbContext, IMapper mapper)
+        public UserService(IConfiguration config, WebshopDbContext dbContext, IMapper mapper)
         {
+            _secretKey = config.GetSection("SecretKey");
             _dbContext = dbContext;
             _mapper = mapper;
         }
@@ -29,6 +35,40 @@ namespace WebshopServer.Services
         public UserDto GetUserById(long id)
         {
             return _mapper.Map<UserDto>(_dbContext.Users.Find(id));
+        }
+
+        public string LoginUser(LoginDto loginDto)
+        {
+            User user = _dbContext.Users.FirstOrDefault(u => u.Email == loginDto.Email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (user.Password == loginDto.Password)
+            {
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim("Id", user.Id.ToString()));
+
+                SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
+
+                SigningCredentials signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+                JwtSecurityToken securityToken = new JwtSecurityToken(
+                    issuer: "http://localhost:44319",
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(20),
+                    signingCredentials: signingCredentials
+                );
+
+                string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
+
+                return tokenString;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public UserDto RegisterUser(UserDto userDto)
