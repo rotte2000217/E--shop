@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -39,7 +40,7 @@ namespace WebshopServer.Services
 
         public string LoginUser(LoginDto loginDto)
         {
-            User user = _dbContext.Users.FirstOrDefault(u => u.Email == loginDto.Email);
+            User user = _dbContext.Users.Include(x => x.Role).FirstOrDefault(u => u.Email == loginDto.Email);
             if (user == null)
             {
                 return null;
@@ -49,6 +50,7 @@ namespace WebshopServer.Services
             {
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim("Id", user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
 
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
 

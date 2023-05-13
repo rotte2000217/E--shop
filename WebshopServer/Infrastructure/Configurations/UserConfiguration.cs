@@ -29,6 +29,8 @@ namespace WebshopServer.Infrastructure.Configurations
             builder.Property(x => x.Birthdate).HasMaxLength(30);
 
             builder.Property(x => x.Address).IsRequired().HasMaxLength(30);
+
+            builder.HasOne(x => x.Role).WithMany(x => x.Users).HasForeignKey(x => x.RoleId);
         }
     }
 }
