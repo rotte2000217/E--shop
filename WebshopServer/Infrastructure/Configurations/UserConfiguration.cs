@@ -20,7 +20,7 @@ namespace WebshopServer.Infrastructure.Configurations
             builder.Property(x => x.Email).IsRequired().HasMaxLength(30);
             builder.HasIndex(x => x.Email).IsUnique();
 
-            builder.Property(x => x.Password).IsRequired().HasMaxLength(30);
+            builder.Property(x => x.Password).IsRequired().HasMaxLength(72);
 
             builder.Property(x => x.FirstName).IsRequired().HasMaxLength(30);
 

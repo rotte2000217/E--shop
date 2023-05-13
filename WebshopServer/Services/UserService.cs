@@ -45,7 +45,7 @@ namespace WebshopServer.Services
                 return null;
             }
 
-            if (user.Password == loginDto.Password)
+            if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
             {
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim("Id", user.Id.ToString()));
@@ -74,6 +74,8 @@ namespace WebshopServer.Services
         public UserDto RegisterUser(UserDto userDto)
         {
             User user = _mapper.Map<User>(userDto);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password, BCrypt.Net.BCrypt.GenerateSalt());
+
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
@@ -85,11 +87,16 @@ namespace WebshopServer.Services
             User user = _dbContext.Users.Find(id);
             user.Username = userDto.Username;
             user.Email = userDto.Email;
-            user.Password = userDto.Password;
             user.FirstName = userDto.FirstName;
             user.LastName = userDto.LastName;
             user.Birthdate = userDto.Birthdate;
             user.Address = userDto.Address;
+
+            // Hash new password only if it's different than the current one
+            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.Password))
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password, BCrypt.Net.BCrypt.GenerateSalt());
+            }
 
             _dbContext.SaveChanges();
 
