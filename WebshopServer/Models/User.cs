@@ -17,5 +17,7 @@ namespace WebshopServer.Models
         public string Address { get; set; }
         public long RoleId { get; set; }
         public Role Role { get; set; }
+        public long? StatusId { get; set; }
+        public Status Status { get; set; }
     }
 }

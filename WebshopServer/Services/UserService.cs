@@ -77,6 +77,7 @@ namespace WebshopServer.Services
         {
             User user = _mapper.Map<User>(userDto);
             user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password, BCrypt.Net.BCrypt.GenerateSalt());
+            user.StatusId = userDto.RoleId == 2 ? 1 : null;
 
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
@@ -99,6 +100,16 @@ namespace WebshopServer.Services
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password, BCrypt.Net.BCrypt.GenerateSalt());
             }
+
+            _dbContext.SaveChanges();
+
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public UserDto VerifyUser(VerifyDto verifyDto)
+        {
+            User user = _dbContext.Users.Find(verifyDto.UserId);
+            user.StatusId = verifyDto.StatusId;
 
             _dbContext.SaveChanges();
 

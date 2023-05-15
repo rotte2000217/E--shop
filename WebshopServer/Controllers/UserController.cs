@@ -66,5 +66,12 @@ namespace WebshopServer.Controllers
 
             return Ok(token);
         }
+
+        [HttpPost("verify")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult VerifyUser([FromBody] VerifyDto verifyDto)
+        {
+            return Ok(_userService.VerifyUser(verifyDto));
+        }
     }
 }

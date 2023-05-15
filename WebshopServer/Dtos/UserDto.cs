@@ -16,5 +16,6 @@ namespace WebshopServer.Dtos
         public string Birthdate { get; set; }
         public string Address { get; set; }
         public long RoleId { get; set; }
+        public long? StatusId { get; set; }
     }
 }

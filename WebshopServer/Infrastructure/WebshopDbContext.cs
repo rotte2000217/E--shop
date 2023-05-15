@@ -11,6 +11,7 @@ namespace WebshopServer.Infrastructure
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Status> Statuses { get; set; }
 
         public WebshopDbContext(DbContextOptions options) : base(options)
         {
@@ -35,6 +36,24 @@ namespace WebshopServer.Infrastructure
                 {
                     Id = 3,
                     Name = "Admin"
+                }
+            );
+
+            modelBuilder.Entity<Status>().HasData(
+                new Status()
+                {
+                    Id = 1,
+                    Name = "Pending"
+                },
+                new Status()
+                {
+                    Id = 2,
+                    Name = "Rejected"
+                },
+                new Status()
+                {
+                    Id = 3,
+                    Name = "Accepted"
                 }
             );
 
