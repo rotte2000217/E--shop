@@ -19,5 +19,6 @@ namespace WebshopServer.Models
         public Role Role { get; set; }
         public long? StatusId { get; set; }
         public Status Status { get; set; }
+        public List<Article> Articles { get; set; }
     }
 }
