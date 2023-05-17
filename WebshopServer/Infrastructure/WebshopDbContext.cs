@@ -12,6 +12,7 @@ namespace WebshopServer.Infrastructure
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Article> Articles { get; set; }
 
         public WebshopDbContext(DbContextOptions options) : base(options)
         {
