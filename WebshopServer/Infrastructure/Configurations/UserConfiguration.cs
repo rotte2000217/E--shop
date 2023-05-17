@@ -30,9 +30,9 @@ namespace WebshopServer.Infrastructure.Configurations
 
             builder.Property(x => x.Address).IsRequired().HasMaxLength(30);
 
-            builder.HasOne(x => x.Role).WithMany(x => x.Users).HasForeignKey(x => x.RoleId);
+            builder.Property(x => x.Role).HasConversion<string>();
 
-            builder.HasOne(x => x.Status).WithMany(x => x.Users).HasForeignKey(x => x.StatusId);
+            builder.Property(x => x.VerificationStatus).HasConversion<string>();
         }
     }
 }

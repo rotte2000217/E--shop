@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using WebshopServer.Dtos;
+using WebshopServer.Enums;
 using WebshopServer.Infrastructure;
 using WebshopServer.Interfaces;
 using WebshopServer.Models;
@@ -40,7 +41,7 @@ namespace WebshopServer.Services
 
         public string LoginUser(LoginDto loginDto)
         {
-            User user = _dbContext.Users.Include(x => x.Role).FirstOrDefault(u => u.Email == loginDto.Email);
+            User user = _dbContext.Users.FirstOrDefault(u => u.Email == loginDto.Email);
             if (user == null)
             {
                 return null;
@@ -50,7 +51,7 @@ namespace WebshopServer.Services
             {
                 List<Claim> claims = new List<Claim>();
                 claims.Add(new Claim("Id", user.Id.ToString()));
-                claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
+                claims.Add(new Claim(ClaimTypes.Role, user.Role.ToString()));
 
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
 
@@ -77,7 +78,7 @@ namespace WebshopServer.Services
         {
             User user = _mapper.Map<User>(userDto);
             user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password, BCrypt.Net.BCrypt.GenerateSalt());
-            user.StatusId = userDto.RoleId == 2 ? 1 : null;
+            user.VerificationStatus = userDto.Role == UserRole.Seller ? VerificationStatus.Pending : null;
 
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
@@ -109,7 +110,7 @@ namespace WebshopServer.Services
         public UserDto VerifyUser(VerifyDto verifyDto)
         {
             User user = _dbContext.Users.Find(verifyDto.UserId);
-            user.StatusId = verifyDto.StatusId;
+            user.VerificationStatus = verifyDto.VerificationStatus;
 
             _dbContext.SaveChanges();
 

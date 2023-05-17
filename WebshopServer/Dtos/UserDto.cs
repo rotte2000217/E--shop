@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebshopServer.Enums;
 
 namespace WebshopServer.Dtos
 {
@@ -15,7 +16,7 @@ namespace WebshopServer.Dtos
         public string LastName { get; set; }
         public string Birthdate { get; set; }
         public string Address { get; set; }
-        public long RoleId { get; set; }
-        public long? StatusId { get; set; }
+        public UserRole Role { get; set; }
+        public VerificationStatus? VerificationStatus { get; set; }
     }
 }
