@@ -86,6 +86,7 @@ namespace WebshopServer
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IArticleService, ArticleService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             services.AddDbContext<WebshopDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WebshopConnectionString")));
 
