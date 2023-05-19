@@ -19,5 +19,6 @@ namespace WebshopServer.Models
         public UserRole Role { get; set; }
         public VerificationStatus? VerificationStatus { get; set; }
         public List<Article> Articles { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }
