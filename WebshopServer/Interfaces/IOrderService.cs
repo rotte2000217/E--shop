@@ -10,7 +10,7 @@ namespace WebshopServer.Interfaces
     {
         List<OrderDto> GetAllOrders();
         OrderDto GetOrderById(long id);
-        OrderDto CreateOrder(OrderDto orderDto);
-        void CancelOrder(long id);
+        OrderDto CreateOrder(OrderDto orderDto, long userId);
+        void CancelOrder(long id, long userId);
     }
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using EntityFramework.Exceptions.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -88,7 +89,11 @@ namespace WebshopServer
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IOrderService, OrderService>();
 
-            services.AddDbContext<WebshopDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WebshopConnectionString")));
+            services.AddDbContext<WebshopDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("WebshopConnectionString"));
+                options.UseExceptionProcessor();
+            });
 
             MapperConfiguration mapperConfig = new MapperConfiguration(mc =>
             {
