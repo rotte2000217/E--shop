@@ -65,6 +65,10 @@ namespace WebshopServer.Services
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim("Id", user.Id.ToString()));
             claims.Add(new Claim(ClaimTypes.Role, user.Role.ToString()));
+            if (user.Role == UserRole.Seller && user.VerificationStatus == VerificationStatus.Accepted)
+            {
+                claims.Add(new Claim("VerificationStatus", user.VerificationStatus.ToString()));
+            }
 
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
 

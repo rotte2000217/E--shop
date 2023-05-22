@@ -85,6 +85,11 @@ namespace WebshopServer
                 };
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsVerifiedSeller", policy => policy.RequireClaim("VerificationStatus", "Accepted"));
+            });
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IOrderService, OrderService>();
