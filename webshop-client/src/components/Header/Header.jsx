@@ -18,6 +18,11 @@ const Header = () => {
               Home
             </Nav.Link>
           </Nav>
+          <Nav>
+            <Nav.Link as={Link} to="/register">
+              Register
+            </Nav.Link>
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
