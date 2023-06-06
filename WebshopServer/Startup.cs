@@ -92,7 +92,7 @@ namespace WebshopServer
                 options.AddPolicy(name: _cors, builder =>
                 {
                     builder
-                    .WithOrigins("https://localhost:3000")
+                    .WithOrigins("http://localhost:3000")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

@@ -6,7 +6,7 @@ import "../../style/Form.css";
 import { registerSchema } from "../../models/registerSchema";
 import { userRoles } from "../../models/userRoles";
 
-const RegisterForm = () => {
+const RegisterForm = ({ handleRegister }) => {
   return (
     <Formik
       initialValues={{
@@ -21,10 +21,8 @@ const RegisterForm = () => {
         role: "",
       }}
       validationSchema={registerSchema}
-      onSubmit={(values, { resetForm }) => {
-        // TODO - Handle registration
-        console.log(values);
-        resetForm();
+      onSubmit={(values) => {
+        handleRegister(values);
       }}
     >
       {({
