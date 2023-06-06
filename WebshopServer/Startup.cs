@@ -26,6 +26,8 @@ namespace WebshopServer
 {
     public class Startup
     {
+        private readonly string _cors = "cors";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -85,6 +87,18 @@ namespace WebshopServer
                 };
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: _cors, builder =>
+                {
+                    builder
+                    .WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("IsVerifiedSeller", policy => policy.RequireClaim("VerificationStatus", "Accepted"));
@@ -120,6 +134,7 @@ namespace WebshopServer
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(_cors);
 
             app.UseRouting();
 
