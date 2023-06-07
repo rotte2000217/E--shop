@@ -1,11 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
 import { loginResponseDto } from "../../models/loginDto";
+import { userResponseDto } from "../../models/userDto";
+
+const localUserId = localStorage.getItem("userId");
+const localAccessToken = localStorage.getItem("accessToken");
 
 const initialState = {
-  userId: null,
+  userId: localUserId ? localUserId : null,
   userInfo: null,
-  accessToken: null,
+  accessToken: localAccessToken ? localAccessToken : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -50,6 +54,26 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const getUserInfo = createAsyncThunk(
+  "auth/getUser",
+  async (_, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      const userId = thunkAPI.getState().auth.userId;
+      return await authService.getUserInfo(accessToken, userId);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -87,8 +111,26 @@ export const authSlice = createSlice({
         const responseDto = loginResponseDto(action.payload);
         state.userId = responseDto.id;
         state.accessToken = responseDto.token;
+
+        localStorage.setItem("userId", state.userId);
+        localStorage.setItem("accessToken", state.accessToken);
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getUserInfo.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserInfo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+
+        const responseDto = userResponseDto(action.payload);
+        state.userInfo = { ...responseDto };
+      })
+      .addCase(getUserInfo.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

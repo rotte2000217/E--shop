@@ -18,9 +18,25 @@ const loginUser = async (loginDto) => {
   return res.data;
 };
 
+const getUserInfo = async (accessToken, userId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const res = await axios.get(
+    `${process.env.REACT_APP_API_URL}/api/users/${userId}`,
+    config
+  );
+
+  return res.data;
+};
+
 const authService = {
   registerUser,
   loginUser,
+  getUserInfo,
 };
 
 export default authService;
