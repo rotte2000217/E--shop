@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebshopServer.Dtos
 {
-    public class LoginDto
+    public class LoginResponseDto
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public long Id { get; set; }
+        public string Token { get; set; }
     }
 }

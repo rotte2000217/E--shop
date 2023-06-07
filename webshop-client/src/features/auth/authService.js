@@ -1,9 +1,33 @@
 import axios from "axios";
 
-const registerUser = async (userData) => {
+const registerUser = async (registerDto) => {
   const res = await axios.post(
     `${process.env.REACT_APP_API_URL}/api/users`,
-    userData
+    registerDto
+  );
+
+  return res.data;
+};
+
+const loginUser = async (loginDto) => {
+  const res = await axios.post(
+    `${process.env.REACT_APP_API_URL}/api/users/login`,
+    loginDto
+  );
+
+  return res.data;
+};
+
+const getUserInfo = async (accessToken, userId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const res = await axios.get(
+    `${process.env.REACT_APP_API_URL}/api/users/${userId}`,
+    config
   );
 
   return res.data;
@@ -11,6 +35,8 @@ const registerUser = async (userData) => {
 
 const authService = {
   registerUser,
+  loginUser,
+  getUserInfo,
 };
 
 export default authService;

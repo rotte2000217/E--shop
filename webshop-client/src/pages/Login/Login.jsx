@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
-import RegisterForm from "../../components/User/RegisterForm";
+import LoginForm from "../../components/User/LoginForm";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { registerUser, resetState } from "../../features/auth/authSlice";
-import { registerRequestDto } from "../../models/registerDto";
+import { loginUser, resetState } from "../../features/auth/authSlice";
+import { loginRequestDto } from "../../models/loginDto";
 
-const Register = () => {
+const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -18,15 +18,15 @@ const Register = () => {
     }
 
     if (authState.isSuccess) {
-      navigate("/login");
+      navigate("/");
     }
 
     dispatch(resetState());
   }, [authState, navigate, dispatch]);
 
-  const handleRegister = (data) => {
-    const dto = registerRequestDto(data);
-    dispatch(registerUser(dto));
+  const handleLogin = (data) => {
+    const dto = loginRequestDto(data);
+    dispatch(loginUser(dto));
   };
 
   if (authState.isLoading) {
@@ -39,10 +39,10 @@ const Register = () => {
 
   return (
     <div className="mb-5">
-      <h1>Register</h1>
-      <RegisterForm handleRegister={handleRegister} />
+      <h1>Login</h1>
+      <LoginForm handleLogin={handleLogin} />
     </div>
   );
 };
 
-export default Register;
+export default Login;

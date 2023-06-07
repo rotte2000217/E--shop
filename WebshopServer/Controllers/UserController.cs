@@ -92,13 +92,13 @@ namespace WebshopServer.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult LoginUser([FromBody] LoginDto loginDto)
+        public IActionResult LoginUser([FromBody] LoginRequestDto requestDto)
         {
-            string token;
+            LoginResponseDto responseDto;
 
             try
             {
-                token = _userService.LoginUser(loginDto);
+                responseDto = _userService.LoginUser(requestDto);
             }
             catch (InvalidCredentialsException e)
             {
@@ -109,7 +109,7 @@ namespace WebshopServer.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok(token);
+            return Ok(responseDto);
         }
 
         [HttpPost("verify")]
