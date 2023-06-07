@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import { Formik } from "formik";
 import { loginSchema } from "../../models/loginSchema";
 
-const LoginForm = () => {
+const LoginForm = ({ handleLogin }) => {
   return (
     <Formik
       initialValues={{
@@ -13,7 +13,7 @@ const LoginForm = () => {
       }}
       validationSchema={loginSchema}
       onSubmit={(values) => {
-        console.log(values);
+        handleLogin(values);
       }}
     >
       {({

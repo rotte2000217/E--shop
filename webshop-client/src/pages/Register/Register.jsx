@@ -18,8 +18,7 @@ const Register = () => {
     }
 
     if (authState.isSuccess) {
-      console.log(authState.user);
-      navigate("/");
+      navigate("/login");
     }
 
     dispatch(resetState());
