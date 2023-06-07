@@ -74,6 +74,11 @@ export const getUserInfo = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk("auth/logout", async () => {
+  localStorage.removeItem("userId");
+  localStorage.removeItem("accessToken");
+});
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -134,6 +139,11 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.userId = null;
+        state.userInfo = null;
+        state.accessToken = null;
       });
   },
 });
