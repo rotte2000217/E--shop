@@ -17,8 +17,8 @@ const Login = () => {
       console.error(authState.message);
     }
 
-    if (authState.isSuccess) {
-      navigate("/");
+    if (authState.isSuccess && authState.userInfo) {
+      navigate("/dashboard");
     }
 
     dispatch(resetState());

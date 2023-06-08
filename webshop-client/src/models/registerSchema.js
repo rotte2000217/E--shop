@@ -1,5 +1,5 @@
 import { object, string, date, number, ref } from "yup";
-import { userRoles } from "./userRoles";
+import { AllowedRole } from "./userRole";
 
 export const registerSchema = object({
   username: string().required("Username is required"),
@@ -16,5 +16,5 @@ export const registerSchema = object({
   address: string().required("Address is required"),
   role: number()
     .required("Role is required")
-    .oneOf(Object.values(userRoles), "Role is not valid"),
+    .oneOf(Object.values(AllowedRole), "Role is not valid"),
 });
