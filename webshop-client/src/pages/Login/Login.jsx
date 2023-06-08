@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser, resetState } from "../../features/auth/authSlice";
 import { loginRequestDto } from "../../models/loginDto";
+import { notifyError } from "../../utils/notify";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Login = () => {
 
   useEffect(() => {
     if (authState.isError) {
-      console.error(authState.message);
+      notifyError(authState.message);
     }
 
     if (authState.isSuccess && authState.userInfo) {

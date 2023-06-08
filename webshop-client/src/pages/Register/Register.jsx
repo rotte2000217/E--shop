@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerUser, resetState } from "../../features/auth/authSlice";
 import { registerRequestDto } from "../../models/registerDto";
+import { notifySuccess, notifyError } from "../../utils/notify";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -14,10 +15,11 @@ const Register = () => {
 
   useEffect(() => {
     if (authState.isError) {
-      console.error(authState.message);
+      notifyError(authState.message);
     }
 
     if (authState.isSuccess) {
+      notifySuccess(authState.message);
       navigate("/login");
     }
 
