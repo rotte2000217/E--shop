@@ -9,6 +9,7 @@ using WebshopServer.Exceptions;
 using WebshopServer.Infrastructure;
 using WebshopServer.Interfaces;
 using WebshopServer.Models;
+using WebshopServer.QueryParameters;
 
 namespace WebshopServer.Services
 {
@@ -23,9 +24,20 @@ namespace WebshopServer.Services
             _mapper = mapper;
         }
 
-        public List<ArticleDto> GetAllArticles()
+        public List<ArticleDto> GetAllArticles(ArticleQueryParameters queryParameters)
         {
-            return _mapper.Map<List<ArticleDto>>(_dbContext.Articles.ToList());
+            List<Article> articles = new List<Article>();
+
+            if (queryParameters.SellerId > 0)
+            {
+                articles = _dbContext.Articles.Where(x => x.SellerId == queryParameters.SellerId).ToList();
+            }
+            else
+            {
+                articles = _dbContext.Articles.ToList();
+            }
+
+            return _mapper.Map<List<ArticleDto>>(articles);
         }
 
         public ArticleDto GetArticleById(long id)

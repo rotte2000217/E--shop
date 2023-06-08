@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebshopServer.Dtos;
 using WebshopServer.Exceptions;
 using WebshopServer.Interfaces;
+using WebshopServer.QueryParameters;
 
 namespace WebshopServer.Controllers
 {
@@ -22,9 +23,9 @@ namespace WebshopServer.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllArticles()
+        public IActionResult GetAllArticles([FromQuery] ArticleQueryParameters queryParameters)
         {
-            return Ok(_articleService.GetAllArticles());
+            return Ok(_articleService.GetAllArticles(queryParameters));
         }
 
         [HttpGet("{id}")]
