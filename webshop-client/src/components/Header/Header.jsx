@@ -4,15 +4,18 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../features/auth/authSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { userInfo } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    navigate("/login");
   };
 
   return (
@@ -31,6 +34,9 @@ const Header = () => {
           <Nav>
             {userInfo ? (
               <>
+                <Nav.Link as={Link} to="/dashboard">
+                  Dashboard
+                </Nav.Link>
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
               </>
             ) : (
