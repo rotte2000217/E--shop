@@ -4,6 +4,7 @@ import UserDetails from "../../components/User/UserDetails";
 import { useSelector, useDispatch } from "react-redux";
 import { getArticles, resetState } from "../../features/articles/articlesSlice";
 import { UserRole } from "../../models/userRole";
+import SellerDashboard from "../../components/Layout/SellerDashboard";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -24,15 +25,17 @@ const Dashboard = () => {
     );
   }
 
-  return (
+  const profileComponent = (
     <div>
-      <h1>Dashboard</h1>
-      <hr />
-      <div>
-        <h3>Profile</h3>
-        <UserDetails userData={userInfo} />
-      </div>
+      <h3>Profile</h3>
+      <UserDetails userData={userInfo} />
     </div>
+  );
+
+  return userInfo.role === UserRole.Seller ? (
+    <SellerDashboard>{profileComponent}</SellerDashboard>
+  ) : (
+    profileComponent
   );
 };
 
