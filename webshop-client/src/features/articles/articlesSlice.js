@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import articlesService from "./articlesService";
 import { articleResponseDto } from "../../models/articleDto";
+import { deleteResponseDto } from "../../models/deleteDto";
 
 const initialState = {
   articles: [],
@@ -34,6 +35,26 @@ export const addArticle = createAsyncThunk(
     try {
       const accessToken = thunkAPI.getState().auth.accessToken;
       return await articlesService.addArticle(accessToken, articleData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteArticle = createAsyncThunk(
+  "articles/delete",
+  async (articleId, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      return await articlesService.deleteArticle(accessToken, articleId);
     } catch (error) {
       const message =
         (error.response &&
@@ -84,6 +105,24 @@ export const articlesSlice = createSlice({
         state.articles.push(action.payload);
       })
       .addCase(addArticle.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(deleteArticle.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteArticle.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Article successfully deleted!";
+
+        const responseDto = deleteResponseDto(action.payload);
+        state.articles = state.articles.filter(
+          (article) => article.id !== responseDto.id
+        );
+      })
+      .addCase(deleteArticle.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

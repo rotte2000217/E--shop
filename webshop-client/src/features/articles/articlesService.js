@@ -26,9 +26,25 @@ const addArticle = async (accessToken, articleDto) => {
   return res.data;
 };
 
+const deleteArticle = async (accessToken, articleId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const res = await axios.delete(
+    `${process.env.REACT_APP_API_URL}/api/articles/${articleId}`,
+    config
+  );
+
+  return res.data;
+};
+
 const articlesService = {
   getArticles,
   addArticle,
+  deleteArticle,
 };
 
 export default articlesService;

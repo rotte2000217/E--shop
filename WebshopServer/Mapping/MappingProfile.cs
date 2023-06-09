@@ -14,6 +14,7 @@ namespace WebshopServer.Mapping
         {
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Article, ArticleResponseDto>();
+            CreateMap<Article, DeleteResponseDto>();
             CreateMap<ArticleRequestDto, Article>();
             CreateMap<Order, OrderDto>().ReverseMap();
         }

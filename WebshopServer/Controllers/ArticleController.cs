@@ -99,9 +99,11 @@ namespace WebshopServer.Controllers
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
+            DeleteResponseDto responseDto;
+
             try
             {
-                _articleService.DeleteArticle(id, userId);
+                responseDto = _articleService.DeleteArticle(id, userId);
             }
             catch (ResourceNotFoundException e)
             {
@@ -112,7 +114,7 @@ namespace WebshopServer.Controllers
                 return Forbid();
             }
 
-            return Ok();
+            return Ok(responseDto);
         }
     }
 }

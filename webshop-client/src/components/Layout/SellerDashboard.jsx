@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import ArticleList from "../Articles/ArticleList";
 import ArticleForm from "../Articles/ArticleForm";
 import { useDispatch, useSelector } from "react-redux";
-import { addArticle, resetState } from "../../features/articles/articlesSlice";
+import {
+  addArticle,
+  deleteArticle,
+  resetState,
+} from "../../features/articles/articlesSlice";
 import { articleRequestDto } from "../../models/articleDto";
 import { notifySuccess, notifyError } from "../../utils/notify";
 
@@ -30,6 +34,10 @@ const SellerDashboard = ({ children }) => {
     dispatch(addArticle(dto));
   };
 
+  const handleDelete = (id) => {
+    dispatch(deleteArticle(id));
+  };
+
   return (
     <div>
       <h1>Seller Dashboard</h1>
@@ -38,7 +46,11 @@ const SellerDashboard = ({ children }) => {
       <hr />
       <div>
         <h3>My Articles</h3>
-        <ArticleList articles={articles} />
+        <ArticleList
+          articles={articles}
+          canDelete={true}
+          handleDelete={handleDelete}
+        />
       </div>
       <hr />
       <div>

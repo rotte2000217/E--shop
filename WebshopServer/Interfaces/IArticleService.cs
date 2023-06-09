@@ -13,6 +13,6 @@ namespace WebshopServer.Interfaces
         ArticleResponseDto GetArticleById(long id);
         ArticleResponseDto CreateArticle(ArticleRequestDto requestDto, long userId);
         ArticleResponseDto UpdateArticle(long id, ArticleRequestDto requestDto, long userId);
-        void DeleteArticle(long id, long userId);
+        DeleteResponseDto DeleteArticle(long id, long userId);
     }
 }

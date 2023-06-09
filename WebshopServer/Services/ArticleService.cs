@@ -107,7 +107,7 @@ namespace WebshopServer.Services
             return _mapper.Map<ArticleResponseDto>(article);
         }
 
-        public void DeleteArticle(long id, long userId)
+        public DeleteResponseDto DeleteArticle(long id, long userId)
         {
             Article article = _dbContext.Articles.Find(id);
 
@@ -123,6 +123,8 @@ namespace WebshopServer.Services
 
             _dbContext.Articles.Remove(article);
             _dbContext.SaveChanges();
+
+            return _mapper.Map<DeleteResponseDto>(article);
         }
     }
 }
