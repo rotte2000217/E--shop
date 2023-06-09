@@ -28,6 +28,26 @@ export const getArticles = createAsyncThunk(
   }
 );
 
+export const addArticle = createAsyncThunk(
+  "articles/add",
+  async (articleData, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      return await articlesService.addArticle(accessToken, articleData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const articlesSlice = createSlice({
   name: "articles",
   initialState,
@@ -50,6 +70,20 @@ export const articlesSlice = createSlice({
         state.articles = action.payload.map((data) => articleResponseDto(data));
       })
       .addCase(getArticles.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(addArticle.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addArticle.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Article successfully added!";
+        state.articles.push(action.payload);
+      })
+      .addCase(addArticle.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

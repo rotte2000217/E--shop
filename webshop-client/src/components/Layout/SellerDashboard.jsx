@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ArticleList from "../Articles/ArticleList";
-import { useSelector } from "react-redux";
+import ArticleForm from "../Articles/ArticleForm";
+import { useDispatch, useSelector } from "react-redux";
+import { addArticle, resetState } from "../../features/articles/articlesSlice";
+import { articleRequestDto } from "../../models/articleDto";
+import { notifySuccess, notifyError } from "../../utils/notify";
 
 const SellerDashboard = ({ children }) => {
-  const { articles } = useSelector((state) => state.articles);
+  const dispatch = useDispatch();
+
+  const { articles, isSuccess, isLoading, isError, message } = useSelector(
+    (state) => state.articles
+  );
+
+  useEffect(() => {
+    if (isError && message) {
+      notifyError(message);
+    }
+
+    if (isSuccess && message) {
+      notifySuccess(message);
+    }
+
+    dispatch(resetState());
+  }, [isSuccess, isLoading, isError, message, dispatch]);
+
+  const handleCreate = (data) => {
+    const dto = articleRequestDto(data);
+    dispatch(addArticle(dto));
+  };
 
   return (
     <div>
@@ -14,6 +39,11 @@ const SellerDashboard = ({ children }) => {
       <div>
         <h3>My Articles</h3>
         <ArticleList articles={articles} />
+      </div>
+      <hr />
+      <div>
+        <h3>Add Article</h3>
+        <ArticleForm handleSubmit={handleCreate} />
       </div>
     </div>
   );

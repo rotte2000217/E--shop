@@ -1,3 +1,12 @@
+export function articleRequestDto(data) {
+  return {
+    name: data.name,
+    price: parseFloat(data.price),
+    quantity: parseInt(data.quantity),
+    description: data.description,
+  };
+}
+
 export function articleResponseDto(data) {
   return {
     id: data.id,
