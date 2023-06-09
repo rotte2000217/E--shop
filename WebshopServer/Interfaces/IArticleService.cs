@@ -9,10 +9,10 @@ namespace WebshopServer.Interfaces
 {
     public interface IArticleService
     {
-        List<ArticleDto> GetAllArticles(ArticleQueryParameters queryParameters);
-        ArticleDto GetArticleById(long id);
-        ArticleDto CreateArticle(ArticleDto articleDto, long userId);
-        ArticleDto UpdateArticle(long id, ArticleDto articleDto, long userId);
+        List<ArticleResponseDto> GetAllArticles(ArticleQueryParameters queryParameters);
+        ArticleResponseDto GetArticleById(long id);
+        ArticleResponseDto CreateArticle(ArticleRequestDto requestDto, long userId);
+        ArticleResponseDto UpdateArticle(long id, ArticleRequestDto requestDto, long userId);
         void DeleteArticle(long id, long userId);
     }
 }

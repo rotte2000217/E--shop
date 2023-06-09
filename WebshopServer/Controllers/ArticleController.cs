@@ -31,7 +31,7 @@ namespace WebshopServer.Controllers
         [HttpGet("{id}")]
         public IActionResult GetArticleById(long id)
         {
-            ArticleDto article;
+            ArticleResponseDto article;
 
             try
             {
@@ -47,15 +47,15 @@ namespace WebshopServer.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller", Policy = "IsVerifiedSeller")]
-        public IActionResult CreateArticle([FromBody] ArticleDto articleDto)
+        public IActionResult CreateArticle([FromBody] ArticleRequestDto requestDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-            ArticleDto article;
+            ArticleResponseDto article;
 
             try
             {
-                article = _articleService.CreateArticle(articleDto, userId);
+                article = _articleService.CreateArticle(requestDto, userId);
             }
             catch (InvalidFieldsException e)
             {
@@ -67,15 +67,15 @@ namespace WebshopServer.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Seller", Policy = "IsVerifiedSeller")]
-        public IActionResult UpdateArticle(long id, [FromBody] ArticleDto articleDto)
+        public IActionResult UpdateArticle(long id, [FromBody] ArticleRequestDto requestDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-            ArticleDto article;
+            ArticleResponseDto article;
 
             try
             {
-                article = _articleService.UpdateArticle(id, articleDto, userId);
+                article = _articleService.UpdateArticle(id, requestDto, userId);
             }
             catch (ResourceNotFoundException e)
             {

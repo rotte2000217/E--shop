@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import articlesService from "./articlesService";
+import { articleResponseDto } from "../../models/articleDto";
 
 const initialState = {
   articles: [],
@@ -46,7 +47,7 @@ export const articlesSlice = createSlice({
       .addCase(getArticles.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.articles = action.payload;
+        state.articles = action.payload.map((data) => articleResponseDto(data));
       })
       .addCase(getArticles.rejected, (state, action) => {
         state.isLoading = false;
