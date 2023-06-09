@@ -102,7 +102,9 @@ export const articlesSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.message = "Article successfully added!";
-        state.articles.push(action.payload);
+
+        const responseDto = articleResponseDto(action.payload);
+        state.articles.push(responseDto);
       })
       .addCase(addArticle.rejected, (state, action) => {
         state.isLoading = false;
