@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import ordersService from "./ordersService";
 import { orderResponseDto } from "../../models/orderDto";
 import { deleteResponseDto } from "../../models/deleteDto";
+import { orderQueryParameters } from "../../models/queryParameters";
 
 const initialState = {
   orders: [],
@@ -13,9 +14,11 @@ const initialState = {
 
 export const getOrders = createAsyncThunk(
   "orders/get",
-  async (queryParameters, thunkAPI) => {
+  async (queryParams, thunkAPI) => {
     try {
-      return await ordersService.getOrders(queryParameters);
+      return await ordersService.getOrders(
+        orderQueryParameters({ ...queryParams })
+      );
     } catch (error) {
       const message =
         (error.response &&
