@@ -69,6 +69,31 @@ export const deleteArticle = createAsyncThunk(
   }
 );
 
+export const editArticle = createAsyncThunk(
+  "articles/edit",
+  async (thunkData, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      const { articleId, articleData } = thunkData;
+      return await articlesService.editArticle(
+        accessToken,
+        articleId,
+        articleData
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const articlesSlice = createSlice({
   name: "articles",
   initialState,
@@ -125,6 +150,27 @@ export const articlesSlice = createSlice({
         );
       })
       .addCase(deleteArticle.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(editArticle.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(editArticle.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Article successfully edited!";
+
+        const responseDto = articleResponseDto(action.payload);
+        state.articles = state.articles.map((article) => {
+          if (article.id === responseDto.id) {
+            return responseDto;
+          }
+          return article;
+        });
+      })
+      .addCase(editArticle.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

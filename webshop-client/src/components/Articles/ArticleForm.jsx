@@ -5,14 +5,15 @@ import { Formik } from "formik";
 import "../../style/Form.css";
 import { articleSchema } from "../../models/articleSchema";
 
-const ArticleForm = ({ handleSubmit }) => {
+const ArticleForm = ({ handleSubmit, articleData }) => {
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={{
-        name: "",
-        price: "",
-        quantity: "",
-        description: "",
+        name: articleData ? articleData.name : "",
+        price: articleData ? articleData.price : "",
+        quantity: articleData ? articleData.quantity : "",
+        description: articleData ? articleData.description : "",
       }}
       validationSchema={articleSchema}
       onSubmit={(values, { resetForm }) => {

@@ -41,10 +41,27 @@ const deleteArticle = async (accessToken, articleId) => {
   return res.data;
 };
 
+const editArticle = async (accessToken, articleId, articleDto) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const res = await axios.put(
+    `${process.env.REACT_APP_API_URL}/api/articles/${articleId}`,
+    articleDto,
+    config
+  );
+
+  return res.data;
+};
+
 const articlesService = {
   getArticles,
   addArticle,
   deleteArticle,
+  editArticle,
 };
 
 export default articlesService;

@@ -1,17 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ArticleList from "../Articles/ArticleList";
 import ArticleForm from "../Articles/ArticleForm";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addArticle,
   deleteArticle,
+  editArticle,
   resetState,
 } from "../../features/articles/articlesSlice";
 import { articleRequestDto } from "../../models/articleDto";
 import { notifySuccess, notifyError } from "../../utils/notify";
+import ArticleModal from "../Articles/ArticleModal";
 
 const SellerDashboard = ({ children }) => {
   const dispatch = useDispatch();
+
+  const [edittingArticle, setEdittingArticle] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const { articles, isSuccess, isLoading, isError, message } = useSelector(
     (state) => state.articles
@@ -27,7 +32,15 @@ const SellerDashboard = ({ children }) => {
     }
 
     dispatch(resetState());
-  }, [isSuccess, isLoading, isError, message, dispatch]);
+  }, [
+    isSuccess,
+    isLoading,
+    isError,
+    message,
+    articles,
+    edittingArticle,
+    dispatch,
+  ]);
 
   const handleCreate = (data) => {
     const dto = articleRequestDto(data);
@@ -36,6 +49,28 @@ const SellerDashboard = ({ children }) => {
 
   const handleDelete = (id) => {
     dispatch(deleteArticle(id));
+  };
+
+  const handleSetEdit = (articleData) => {
+    setEdittingArticle(articleData);
+    setShowModal(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEdittingArticle(null);
+    setShowModal(false);
+  };
+
+  const handleConfirmEdit = (articleData) => {
+    const data = {
+      articleId: edittingArticle.id,
+      articleData: articleRequestDto(articleData),
+    };
+
+    dispatch(editArticle(data));
+
+    setEdittingArticle(null);
+    setShowModal(false);
   };
 
   return (
@@ -50,6 +85,8 @@ const SellerDashboard = ({ children }) => {
           articles={articles}
           canDelete={true}
           handleDelete={handleDelete}
+          canEdit={true}
+          handleSetEdit={handleSetEdit}
         />
       </div>
       <hr />
@@ -57,6 +94,12 @@ const SellerDashboard = ({ children }) => {
         <h3>Add Article</h3>
         <ArticleForm handleSubmit={handleCreate} />
       </div>
+      <ArticleModal
+        isVisible={showModal}
+        data={edittingArticle}
+        handleClose={handleCancelEdit}
+        handleConfirm={handleConfirmEdit}
+      />
     </div>
   );
 };

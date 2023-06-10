@@ -63,3 +63,9 @@
   color: #ff0000;
   cursor: pointer;
 }
+
+.article-edit {
+  margin-left: 10px;
+  color: orange;
+  cursor: pointer;
+}

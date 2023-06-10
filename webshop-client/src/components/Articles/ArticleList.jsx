@@ -3,7 +3,13 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import ArticleItem from "./ArticleItem";
 
-const ArticleList = ({ articles, canDelete, handleDelete }) => {
+const ArticleList = ({
+  articles,
+  canDelete,
+  handleDelete,
+  canEdit,
+  handleSetEdit,
+}) => {
   return (
     <Card>
       <ListGroup variant="flush">
@@ -13,6 +19,8 @@ const ArticleList = ({ articles, canDelete, handleDelete }) => {
               articleData={article}
               canDelete={canDelete}
               handleDelete={handleDelete}
+              canEdit={canEdit}
+              handleSetEdit={handleSetEdit}
             />
           </ListGroup.Item>
         ))}

@@ -1,8 +1,14 @@
 import React from "react";
 import "../../style/Article.css";
-import { Trash } from "react-bootstrap-icons";
+import { Trash, PencilSquare } from "react-bootstrap-icons";
 
-const ArticleItem = ({ articleData, canDelete, handleDelete }) => {
+const ArticleItem = ({
+  articleData,
+  canDelete,
+  handleDelete,
+  canEdit,
+  handleSetEdit,
+}) => {
   return (
     <div className="article">
       <div className="article-photo">
@@ -26,6 +32,12 @@ const ArticleItem = ({ articleData, canDelete, handleDelete }) => {
             <Trash
               className="article-delete"
               onClick={(e) => handleDelete(articleData.id)}
+            />
+          ) : null}
+          {canEdit ? (
+            <PencilSquare
+              className="article-edit"
+              onClick={(e) => handleSetEdit(articleData)}
             />
           ) : null}
         </div>
