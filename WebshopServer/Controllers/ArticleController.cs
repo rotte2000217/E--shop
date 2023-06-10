@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebshopServer.Dtos;
 using WebshopServer.Exceptions;
 using WebshopServer.Interfaces;
+using WebshopServer.QueryParameters;
 
 namespace WebshopServer.Controllers
 {
@@ -22,15 +23,15 @@ namespace WebshopServer.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllArticles()
+        public IActionResult GetAllArticles([FromQuery] ArticleQueryParameters queryParameters)
         {
-            return Ok(_articleService.GetAllArticles());
+            return Ok(_articleService.GetAllArticles(queryParameters));
         }
 
         [HttpGet("{id}")]
         public IActionResult GetArticleById(long id)
         {
-            ArticleDto article;
+            ArticleResponseDto article;
 
             try
             {
@@ -46,15 +47,15 @@ namespace WebshopServer.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Seller", Policy = "IsVerifiedSeller")]
-        public IActionResult CreateArticle([FromBody] ArticleDto articleDto)
+        public IActionResult CreateArticle([FromBody] ArticleRequestDto requestDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-            ArticleDto article;
+            ArticleResponseDto article;
 
             try
             {
-                article = _articleService.CreateArticle(articleDto, userId);
+                article = _articleService.CreateArticle(requestDto, userId);
             }
             catch (InvalidFieldsException e)
             {
@@ -66,15 +67,15 @@ namespace WebshopServer.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Seller", Policy = "IsVerifiedSeller")]
-        public IActionResult UpdateArticle(long id, [FromBody] ArticleDto articleDto)
+        public IActionResult UpdateArticle(long id, [FromBody] ArticleRequestDto requestDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-            ArticleDto article;
+            ArticleResponseDto article;
 
             try
             {
-                article = _articleService.UpdateArticle(id, articleDto, userId);
+                article = _articleService.UpdateArticle(id, requestDto, userId);
             }
             catch (ResourceNotFoundException e)
             {
@@ -98,9 +99,11 @@ namespace WebshopServer.Controllers
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
+            DeleteResponseDto responseDto;
+
             try
             {
-                _articleService.DeleteArticle(id, userId);
+                responseDto = _articleService.DeleteArticle(id, userId);
             }
             catch (ResourceNotFoundException e)
             {
@@ -111,7 +114,7 @@ namespace WebshopServer.Controllers
                 return Forbid();
             }
 
-            return Ok();
+            return Ok(responseDto);
         }
     }
 }
