@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebshopServer.Dtos;
 using WebshopServer.Exceptions;
 using WebshopServer.Interfaces;
+using WebshopServer.QueryParameters;
 
 namespace WebshopServer.Controllers
 {
@@ -22,15 +23,15 @@ namespace WebshopServer.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllOrders()
+        public IActionResult GetAllOrders([FromQuery] OrderQueryParameters queryParameters)
         {
-            return Ok(_orderService.GetAllOrders());
+            return Ok(_orderService.GetAllOrders(queryParameters));
         }
 
         [HttpGet("{id}")]
         public IActionResult GetOrderById(long id)
         {
-            OrderDto order;
+            OrderResponseDto order;
 
             try
             {
@@ -46,15 +47,15 @@ namespace WebshopServer.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Buyer")]
-        public IActionResult CreateOrder([FromBody] OrderDto orderDto)
+        public IActionResult CreateOrder([FromBody] OrderRequestDto requestDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-            OrderDto order;
+            OrderResponseDto order;
 
             try
             {
-                order = _orderService.CreateOrder(orderDto, userId);
+                order = _orderService.CreateOrder(requestDto, userId);
             }
             catch (ResourceNotFoundException e)
             {
@@ -74,20 +75,26 @@ namespace WebshopServer.Controllers
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
+            DeleteResponseDto responseDto;
+
             try
             {
-                _orderService.CancelOrder(id, userId);
+                responseDto = _orderService.CancelOrder(id, userId);
             }
             catch (ResourceNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
             }
             catch (ForbiddenActionException)
             {
                 return Forbid();
             }
 
-            return NoContent();
+            return Ok(responseDto);
         }
     }
 }

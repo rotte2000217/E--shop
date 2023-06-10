@@ -10,6 +10,7 @@ using WebshopServer.Exceptions;
 using WebshopServer.Infrastructure;
 using WebshopServer.Interfaces;
 using WebshopServer.Models;
+using WebshopServer.QueryParameters;
 
 namespace WebshopServer.Services
 {
@@ -24,14 +25,29 @@ namespace WebshopServer.Services
             _mapper = mapper;
         }
 
-        public List<OrderDto> GetAllOrders()
+        public List<OrderResponseDto> GetAllOrders(OrderQueryParameters queryParameters)
         {
-            return _mapper.Map<List<OrderDto>>(_dbContext.Orders.ToList());
+            List<Order> orders = new List<Order>();
+
+            if (queryParameters.BuyerId > 0)
+            {
+                orders = _dbContext.Orders.Where(x => x.BuyerId == queryParameters.BuyerId).ToList();
+            }
+            else if (queryParameters.SellerId > 0)
+            {
+                orders = _dbContext.Orders.Where(x => x.Article.SellerId == queryParameters.SellerId).ToList();
+            }
+            else
+            {
+                orders = _dbContext.Orders.ToList();
+            }
+
+            return _mapper.Map<List<OrderResponseDto>>(orders);
         }
 
-        public OrderDto GetOrderById(long id)
+        public OrderResponseDto GetOrderById(long id)
         {
-            OrderDto order = _mapper.Map<OrderDto>(_dbContext.Orders.Find(id));
+            OrderResponseDto order = _mapper.Map<OrderResponseDto>(_dbContext.Orders.Find(id));
 
             if (order == null)
             {
@@ -41,9 +57,9 @@ namespace WebshopServer.Services
             return order;
         }
 
-        public OrderDto CreateOrder(OrderDto orderDto, long userId)
+        public OrderResponseDto CreateOrder(OrderRequestDto requestDto, long userId)
         {
-            Order order = _mapper.Map<Order>(orderDto);
+            Order order = _mapper.Map<Order>(requestDto);
             order.BuyerId = userId;
 
             Article article = _dbContext.Articles.Find(order.ArticleId);
@@ -79,10 +95,10 @@ namespace WebshopServer.Services
                 throw;
             }
 
-            return _mapper.Map<OrderDto>(order);
+            return _mapper.Map<OrderResponseDto>(order);
         }
 
-        public void CancelOrder(long id, long userId)
+        public DeleteResponseDto CancelOrder(long id, long userId)
         {
             Order order = _dbContext.Orders.Find(id);
 
@@ -96,6 +112,11 @@ namespace WebshopServer.Services
                 throw new ForbiddenActionException("Buyers can only cancel their own orders!");
             }
 
+            if ((DateTime.UtcNow - order.CreatedAt).Hours > 1)
+            {
+                throw new InvalidFieldsException("Orders can only be cancelled in the first hour!");
+            }
+
             Article article = _dbContext.Articles.Find(order.ArticleId);
 
             if (article == null)
@@ -107,6 +128,8 @@ namespace WebshopServer.Services
 
             _dbContext.Orders.Remove(order);
             _dbContext.SaveChanges();
+
+            return _mapper.Map<DeleteResponseDto>(order);
         }
     }
 }

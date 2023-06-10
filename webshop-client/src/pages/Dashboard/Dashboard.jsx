@@ -2,9 +2,15 @@ import React, { useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import UserDetails from "../../components/User/UserDetails";
 import { useSelector, useDispatch } from "react-redux";
-import { getArticles, resetState } from "../../features/articles/articlesSlice";
+import {
+  getArticles,
+  articlesSlice,
+} from "../../features/articles/articlesSlice";
+import { getOrders, ordersSlice } from "../../features/orders/ordersSlice";
 import { UserRole } from "../../models/userRole";
 import SellerDashboard from "../../components/Layout/SellerDashboard";
+import BuyerDashboard from "../../components/Layout/BuyerDashboard";
+import AdminDashboard from "../../components/Layout/AdminDashboard";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -12,8 +18,32 @@ const Dashboard = () => {
   const { userId, userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (userInfo && userInfo.role === UserRole.Seller) {
-      dispatch(getArticles(userId)).then((_) => dispatch(resetState()));
+    if (userInfo) {
+      switch (userInfo.role) {
+        case UserRole.Buyer:
+          dispatch(getOrders({ buyerId: userId })).then((_) =>
+            dispatch(ordersSlice.actions.resetState())
+          );
+          dispatch(getArticles()).then((_) =>
+            dispatch(articlesSlice.actions.resetState())
+          );
+          break;
+        case UserRole.Seller:
+          dispatch(getOrders({ sellerId: userId })).then((_) =>
+            dispatch(ordersSlice.actions.resetState())
+          );
+          dispatch(getArticles(userId)).then((_) =>
+            dispatch(articlesSlice.actions.resetState())
+          );
+          break;
+        case UserRole.Admin:
+          dispatch(getOrders()).then((_) =>
+            dispatch(ordersSlice.actions.resetState())
+          );
+          break;
+        default:
+          break;
+      }
     }
   }, [userInfo, userId, dispatch]);
 
@@ -32,11 +62,13 @@ const Dashboard = () => {
     </div>
   );
 
-  return userInfo.role === UserRole.Seller ? (
+  return userInfo.role === UserRole.Buyer ? (
+    <BuyerDashboard>{profileComponent}</BuyerDashboard>
+  ) : userInfo.role === UserRole.Seller ? (
     <SellerDashboard>{profileComponent}</SellerDashboard>
-  ) : (
-    profileComponent
-  );
+  ) : userInfo.role === UserRole.Admin ? (
+    <AdminDashboard>{profileComponent}</AdminDashboard>
+  ) : null;
 };
 
 export default Dashboard;
