@@ -1,12 +1,19 @@
 import React, { useEffect } from "react";
 import OrderList from "../Orders/OrderList";
+import OrderForm from "../Orders/OrderForm";
 import { useDispatch, useSelector } from "react-redux";
-import { cancelOrder, resetState } from "../../features/orders/ordersSlice";
+import {
+  createOrder,
+  cancelOrder,
+  resetState,
+} from "../../features/orders/ordersSlice";
+import { orderRequestDto } from "../../models/orderDto";
 import { notifySuccess, notifyError } from "../../utils/notify";
 
 const BuyerDashboard = ({ children }) => {
   const dispatch = useDispatch();
 
+  const { articles } = useSelector((state) => state.articles);
   const { orders, isSuccess, isLoading, isError, message } = useSelector(
     (state) => state.orders
   );
@@ -34,6 +41,11 @@ const BuyerDashboard = ({ children }) => {
 
     dispatch(resetState());
   }, [isSuccess, isLoading, isError, message, dispatch]);
+
+  const handleCreate = (data) => {
+    const dto = orderRequestDto(data);
+    dispatch(createOrder(dto));
+  };
 
   const handleDelete = (id) => {
     dispatch(cancelOrder(id));
@@ -64,6 +76,18 @@ const BuyerDashboard = ({ children }) => {
           <OrderList orders={previousOrders} />
         ) : (
           <p>No Previous Orders</p>
+        )}
+      </div>
+      <hr />
+      <div>
+        <h3>Create Order</h3>
+        {articles.length > 0 ? (
+          <OrderForm handleSubmit={handleCreate} articles={articles} />
+        ) : (
+          <p>
+            You can't create an order because there are currently no articles
+            available!
+          </p>
         )}
       </div>
     </div>

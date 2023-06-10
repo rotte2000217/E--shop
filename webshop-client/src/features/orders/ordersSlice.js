@@ -29,6 +29,26 @@ export const getOrders = createAsyncThunk(
   }
 );
 
+export const createOrder = createAsyncThunk(
+  "orders/create",
+  async (orderData, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      return await ordersService.createOrder(accessToken, orderData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const cancelOrder = createAsyncThunk(
   "orders/delete",
   async (orderId, thunkAPI) => {
@@ -71,6 +91,22 @@ export const ordersSlice = createSlice({
         state.orders = action.payload.map((data) => orderResponseDto(data));
       })
       .addCase(getOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(createOrder.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Order successfully created!";
+
+        const responseDto = orderResponseDto(action.payload);
+        state.orders.push(responseDto);
+      })
+      .addCase(createOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

@@ -23,6 +23,9 @@ const Dashboard = () => {
           dispatch(getOrders(userId)).then((_) =>
             dispatch(ordersSlice.actions.resetState())
           );
+          dispatch(getArticles()).then((_) =>
+            dispatch(articlesSlice.actions.resetState())
+          );
           break;
         case UserRole.Seller:
           dispatch(getArticles(userId)).then((_) =>

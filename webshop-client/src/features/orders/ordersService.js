@@ -10,6 +10,22 @@ const getOrders = async (buyerId) => {
   return res.data;
 };
 
+const createOrder = async (accessToken, orderDto) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const res = await axios.post(
+    `${process.env.REACT_APP_API_URL}/api/orders`,
+    orderDto,
+    config
+  );
+
+  return res.data;
+};
+
 const cancelOrder = async (accessToken, orderId) => {
   const config = {
     headers: {
@@ -27,6 +43,7 @@ const cancelOrder = async (accessToken, orderId) => {
 
 const ordersService = {
   getOrders,
+  createOrder,
   cancelOrder,
 };
 
