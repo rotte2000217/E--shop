@@ -11,6 +11,7 @@ import {
 import { articleRequestDto } from "../../models/articleDto";
 import { notifySuccess, notifyError } from "../../utils/notify";
 import ArticleModal from "../Articles/ArticleModal";
+import OrderList from "../Orders/OrderList";
 
 const SellerDashboard = ({ children }) => {
   const dispatch = useDispatch();
@@ -18,9 +19,22 @@ const SellerDashboard = ({ children }) => {
   const [edittingArticle, setEdittingArticle] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  const { orders } = useSelector((state) => state.orders);
   const { articles, isSuccess, isLoading, isError, message } = useSelector(
     (state) => state.articles
   );
+
+  const isPreviousOrder = (order) => {
+    const createdAt = new Date(order.createdAt);
+    const deliveryTime = order.deliveryTime;
+    const deliveredAt = new Date();
+    deliveredAt.setHours(createdAt.getHours() + deliveryTime);
+
+    return deliveredAt < new Date();
+  };
+
+  const previousOrders = orders.filter((order) => isPreviousOrder(order));
+  const newOrders = orders.filter((order) => !isPreviousOrder(order));
 
   useEffect(() => {
     if (isError && message) {
@@ -93,6 +107,16 @@ const SellerDashboard = ({ children }) => {
       <div>
         <h3>Add Article</h3>
         <ArticleForm handleSubmit={handleCreate} />
+      </div>
+      <hr />
+      <div>
+        <h3>New Orders</h3>
+        <OrderList orders={newOrders} />
+      </div>
+      <hr />
+      <div>
+        <h3>Previous Orders</h3>
+        <OrderList orders={previousOrders} />
       </div>
       <ArticleModal
         isVisible={showModal}

@@ -13,9 +13,9 @@ const initialState = {
 
 export const getOrders = createAsyncThunk(
   "orders/get",
-  async (buyerId, thunkAPI) => {
+  async (queryParameters, thunkAPI) => {
     try {
-      return await ordersService.getOrders(buyerId);
+      return await ordersService.getOrders(queryParameters);
     } catch (error) {
       const message =
         (error.response &&

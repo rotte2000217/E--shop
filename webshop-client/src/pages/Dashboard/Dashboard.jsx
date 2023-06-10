@@ -10,6 +10,7 @@ import { getOrders, ordersSlice } from "../../features/orders/ordersSlice";
 import { UserRole } from "../../models/userRole";
 import SellerDashboard from "../../components/Layout/SellerDashboard";
 import BuyerDashboard from "../../components/Layout/BuyerDashboard";
+import { orderQueryParameters } from "../../models/queryParameters";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -18,9 +19,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (userInfo) {
+      let queryParams;
       switch (userInfo.role) {
         case UserRole.Buyer:
-          dispatch(getOrders(userId)).then((_) =>
+          queryParams = orderQueryParameters({
+            buyerId: userId,
+          });
+          dispatch(getOrders(queryParams)).then((_) =>
             dispatch(ordersSlice.actions.resetState())
           );
           dispatch(getArticles()).then((_) =>
@@ -28,6 +33,12 @@ const Dashboard = () => {
           );
           break;
         case UserRole.Seller:
+          queryParams = orderQueryParameters({
+            sellerId: userId,
+          });
+          dispatch(getOrders(queryParams)).then((_) =>
+            dispatch(ordersSlice.actions.resetState())
+          );
           dispatch(getArticles(userId)).then((_) =>
             dispatch(articlesSlice.actions.resetState())
           );

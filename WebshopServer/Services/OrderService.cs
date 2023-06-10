@@ -33,6 +33,10 @@ namespace WebshopServer.Services
             {
                 orders = _dbContext.Orders.Where(x => x.BuyerId == queryParameters.BuyerId).ToList();
             }
+            else if (queryParameters.SellerId > 0)
+            {
+                orders = _dbContext.Orders.Where(x => x.Article.SellerId == queryParameters.SellerId).ToList();
+            }
             else
             {
                 orders = _dbContext.Orders.ToList();

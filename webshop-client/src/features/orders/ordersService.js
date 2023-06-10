@@ -1,10 +1,15 @@
 import axios from "axios";
 
-const getOrders = async (buyerId) => {
-  const queryParameters = buyerId ? `?buyerId=${buyerId}` : "";
+const getOrders = async (queryParameters) => {
+  const { buyerId, sellerId } = queryParameters;
+  const query = buyerId
+    ? `?buyerId=${buyerId}`
+    : sellerId
+    ? `?sellerId=${sellerId}`
+    : "";
 
   const res = await axios.get(
-    `${process.env.REACT_APP_API_URL}/api/orders${queryParameters}`
+    `${process.env.REACT_APP_API_URL}/api/orders${query}`
   );
 
   return res.data;

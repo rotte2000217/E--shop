@@ -29,7 +29,7 @@ const OrderItem = ({ orderData, canDelete, handleDelete }) => {
       </div>
 
       <div className="order-comment">
-        {orderData.comment ? orderData.comment : "You didn't write a comment"}
+        {orderData.comment ? orderData.comment : "-"}
       </div>
 
       <div className="order-info">
