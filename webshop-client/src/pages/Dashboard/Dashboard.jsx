@@ -9,6 +9,7 @@ import {
 import { getOrders, ordersSlice } from "../../features/orders/ordersSlice";
 import { UserRole } from "../../models/userRole";
 import SellerDashboard from "../../components/Layout/SellerDashboard";
+import BuyerDashboard from "../../components/Layout/BuyerDashboard";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -49,7 +50,9 @@ const Dashboard = () => {
     </div>
   );
 
-  return userInfo.role === UserRole.Seller ? (
+  return userInfo.role === UserRole.Buyer ? (
+    <BuyerDashboard>{profileComponent}</BuyerDashboard>
+  ) : userInfo.role === UserRole.Seller ? (
     <SellerDashboard>{profileComponent}</SellerDashboard>
   ) : (
     profileComponent
