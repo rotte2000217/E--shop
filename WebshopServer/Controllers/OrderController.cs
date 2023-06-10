@@ -30,7 +30,7 @@ namespace WebshopServer.Controllers
         [HttpGet("{id}")]
         public IActionResult GetOrderById(long id)
         {
-            OrderDto order;
+            OrderResponseDto order;
 
             try
             {
@@ -46,15 +46,15 @@ namespace WebshopServer.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Buyer")]
-        public IActionResult CreateOrder([FromBody] OrderDto orderDto)
+        public IActionResult CreateOrder([FromBody] OrderRequestDto requestDto)
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
-            OrderDto order;
+            OrderResponseDto order;
 
             try
             {
-                order = _orderService.CreateOrder(orderDto, userId);
+                order = _orderService.CreateOrder(requestDto, userId);
             }
             catch (ResourceNotFoundException e)
             {

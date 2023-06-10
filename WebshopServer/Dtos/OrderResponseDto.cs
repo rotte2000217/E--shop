@@ -6,7 +6,7 @@ using WebshopServer.Enums;
 
 namespace WebshopServer.Dtos
 {
-    public class OrderDto
+    public class OrderResponseDto
     {
         public long Id { get; set; }
         public int Quantity { get; set; }
@@ -16,7 +16,7 @@ namespace WebshopServer.Dtos
         public long BuyerId { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int? DeliveryTime { get; set; }
-        public double? Price { get; set; }
+        public int DeliveryTime { get; set; }
+        public double Price { get; set; }
     }
 }

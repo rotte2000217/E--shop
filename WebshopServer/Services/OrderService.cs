@@ -24,14 +24,14 @@ namespace WebshopServer.Services
             _mapper = mapper;
         }
 
-        public List<OrderDto> GetAllOrders()
+        public List<OrderResponseDto> GetAllOrders()
         {
-            return _mapper.Map<List<OrderDto>>(_dbContext.Orders.ToList());
+            return _mapper.Map<List<OrderResponseDto>>(_dbContext.Orders.ToList());
         }
 
-        public OrderDto GetOrderById(long id)
+        public OrderResponseDto GetOrderById(long id)
         {
-            OrderDto order = _mapper.Map<OrderDto>(_dbContext.Orders.Find(id));
+            OrderResponseDto order = _mapper.Map<OrderResponseDto>(_dbContext.Orders.Find(id));
 
             if (order == null)
             {
@@ -41,9 +41,9 @@ namespace WebshopServer.Services
             return order;
         }
 
-        public OrderDto CreateOrder(OrderDto orderDto, long userId)
+        public OrderResponseDto CreateOrder(OrderRequestDto requestDto, long userId)
         {
-            Order order = _mapper.Map<Order>(orderDto);
+            Order order = _mapper.Map<Order>(requestDto);
             order.BuyerId = userId;
 
             Article article = _dbContext.Articles.Find(order.ArticleId);
@@ -79,7 +79,7 @@ namespace WebshopServer.Services
                 throw;
             }
 
-            return _mapper.Map<OrderDto>(order);
+            return _mapper.Map<OrderResponseDto>(order);
         }
 
         public void CancelOrder(long id, long userId)

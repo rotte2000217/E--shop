@@ -8,9 +8,9 @@ namespace WebshopServer.Interfaces
 {
     public interface IOrderService
     {
-        List<OrderDto> GetAllOrders();
-        OrderDto GetOrderById(long id);
-        OrderDto CreateOrder(OrderDto orderDto, long userId);
+        List<OrderResponseDto> GetAllOrders();
+        OrderResponseDto GetOrderById(long id);
+        OrderResponseDto CreateOrder(OrderRequestDto requestDto, long userId);
         void CancelOrder(long id, long userId);
     }
 }
