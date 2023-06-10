@@ -150,20 +150,25 @@ namespace WebshopServer.Services
             return _mapper.Map<UserResponseDto>(user);
         }
 
-        public UserResponseDto VerifyUser(VerifyDto verifyDto)
+        public VerificationResponseDto VerifyUser(long id, VerificationRequestDto requestDto)
         {
-            User user = _dbContext.Users.Find(verifyDto.UserId);
+            User user = _dbContext.Users.Find(id);
 
             if (user == null)
             {
                 throw new ResourceNotFoundException("User with specified id doesn't exist!");
             }
 
-            user.VerificationStatus = verifyDto.VerificationStatus;
+            if (user.Role != UserRole.Seller)
+            {
+                throw new InvalidFieldsException("Only sellers can be verified!");
+            }
+
+            _mapper.Map(requestDto, user);
 
             _dbContext.SaveChanges();
 
-            return _mapper.Map<UserResponseDto>(user);
+            return _mapper.Map<VerificationResponseDto>(user);
         }
     }
 }

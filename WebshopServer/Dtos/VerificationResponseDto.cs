@@ -6,9 +6,9 @@ using WebshopServer.Enums;
 
 namespace WebshopServer.Dtos
 {
-    public class VerifyDto
+    public class VerificationResponseDto
     {
-        public long UserId { get; set; }
+        public long Id { get; set; }
         public VerificationStatus VerificationStatus { get; set; }
     }
 }

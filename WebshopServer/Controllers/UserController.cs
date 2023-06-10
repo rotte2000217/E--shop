@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebshopServer.Dtos;
 using WebshopServer.Exceptions;
 using WebshopServer.Interfaces;
+using WebshopServer.QueryParameters;
 
 namespace WebshopServer.Controllers
 {
@@ -112,19 +113,23 @@ namespace WebshopServer.Controllers
             return Ok(responseDto);
         }
 
-        [HttpPost("verify")]
+        [HttpPost("verify/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult VerifyUser([FromBody] VerifyDto verifyDto)
+        public IActionResult VerifyUser(long id, [FromBody] VerificationRequestDto requestDto)
         {
-            UserResponseDto user;
+            VerificationResponseDto user;
 
             try
             {
-                user = _userService.VerifyUser(verifyDto);
+                user = _userService.VerifyUser(id, requestDto);
             }
             catch (ResourceNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
             }
 
             return Ok(user);
