@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import OrderList from "../Orders/OrderList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { cancelOrder, resetState } from "../../features/orders/ordersSlice";
+import { notifySuccess, notifyError } from "../../utils/notify";
 
 const BuyerDashboard = ({ children }) => {
-  const { orders } = useSelector((state) => state.orders);
+  const dispatch = useDispatch();
+
+  const { orders, isSuccess, isLoading, isError, message } = useSelector(
+    (state) => state.orders
+  );
 
   const isPreviousOrder = (order) => {
     const createdAt = new Date(order.createdAt);
@@ -17,6 +23,22 @@ const BuyerDashboard = ({ children }) => {
   const previousOrders = orders.filter((order) => isPreviousOrder(order));
   const activeOrders = orders.filter((order) => !isPreviousOrder(order));
 
+  useEffect(() => {
+    if (isError && message) {
+      notifyError(message);
+    }
+
+    if (isSuccess && message) {
+      notifySuccess(message);
+    }
+
+    dispatch(resetState());
+  }, [isSuccess, isLoading, isError, message, dispatch]);
+
+  const handleDelete = (id) => {
+    dispatch(cancelOrder(id));
+  };
+
   return (
     <div>
       <h1>Buyer Dashboard</h1>
@@ -26,7 +48,11 @@ const BuyerDashboard = ({ children }) => {
       <div>
         <h3>Active Orders</h3>
         {activeOrders && activeOrders.length > 0 ? (
-          <OrderList orders={activeOrders} />
+          <OrderList
+            orders={activeOrders}
+            canDelete={true}
+            handleDelete={handleDelete}
+          />
         ) : (
           <p>No Active Orders</p>
         )}

@@ -75,20 +75,26 @@ namespace WebshopServer.Controllers
         {
             long userId = long.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);
 
+            DeleteResponseDto responseDto;
+
             try
             {
-                _orderService.CancelOrder(id, userId);
+                responseDto = _orderService.CancelOrder(id, userId);
             }
             catch (ResourceNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (InvalidFieldsException e)
+            {
+                return BadRequest(e.Message);
             }
             catch (ForbiddenActionException)
             {
                 return Forbid();
             }
 
-            return NoContent();
+            return Ok(responseDto);
         }
     }
 }

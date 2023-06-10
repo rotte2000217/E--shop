@@ -94,7 +94,7 @@ namespace WebshopServer.Services
             return _mapper.Map<OrderResponseDto>(order);
         }
 
-        public void CancelOrder(long id, long userId)
+        public DeleteResponseDto CancelOrder(long id, long userId)
         {
             Order order = _dbContext.Orders.Find(id);
 
@@ -108,6 +108,11 @@ namespace WebshopServer.Services
                 throw new ForbiddenActionException("Buyers can only cancel their own orders!");
             }
 
+            if ((DateTime.UtcNow - order.CreatedAt).Hours > 1)
+            {
+                throw new InvalidFieldsException("Orders can only be cancelled in the first hour!");
+            }
+
             Article article = _dbContext.Articles.Find(order.ArticleId);
 
             if (article == null)
@@ -119,6 +124,8 @@ namespace WebshopServer.Services
 
             _dbContext.Orders.Remove(order);
             _dbContext.SaveChanges();
+
+            return _mapper.Map<DeleteResponseDto>(order);
         }
     }
 }

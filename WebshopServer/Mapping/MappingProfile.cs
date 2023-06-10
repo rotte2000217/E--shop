@@ -17,6 +17,7 @@ namespace WebshopServer.Mapping
             CreateMap<Article, DeleteResponseDto>();
             CreateMap<ArticleRequestDto, Article>();
             CreateMap<Order, OrderResponseDto>();
+            CreateMap<Order, DeleteResponseDto>();
             CreateMap<OrderRequestDto, Order>();
         }
     }

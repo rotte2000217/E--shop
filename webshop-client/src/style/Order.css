@@ -49,3 +49,14 @@
   align-items: center;
   border-radius: 5px;
 }
+
+.order-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.order-delete {
+  color: #ff0000;
+  cursor: pointer;
+}

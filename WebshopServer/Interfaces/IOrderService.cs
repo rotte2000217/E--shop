@@ -12,6 +12,6 @@ namespace WebshopServer.Interfaces
         List<OrderResponseDto> GetAllOrders(OrderQueryParameters queryParameters);
         OrderResponseDto GetOrderById(long id);
         OrderResponseDto CreateOrder(OrderRequestDto requestDto, long userId);
-        void CancelOrder(long id, long userId);
+        DeleteResponseDto CancelOrder(long id, long userId);
     }
 }
