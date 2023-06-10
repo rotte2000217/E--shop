@@ -30,7 +30,7 @@ namespace WebshopServer.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUserById(long id)
         {
-            UserDto user;
+            UserResponseDto user;
 
             try
             {
@@ -45,13 +45,13 @@ namespace WebshopServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult RegisterUser([FromBody] UserDto userDto)
+        public IActionResult RegisterUser([FromBody] RegisterRequestDto requestDto)
         {
-            UserDto user;
+            UserResponseDto user;
 
             try
             {
-                user = _userService.RegisterUser(userDto);
+                user = _userService.RegisterUser(requestDto);
             }
             catch (InvalidCredentialsException e)
             {
@@ -66,18 +66,18 @@ namespace WebshopServer.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(long id, [FromBody] UserDto userDto)
+        public IActionResult UpdateUser(long id, [FromBody] UserRequestDto requestDto)
         {
             if (!User.HasClaim("Id", id.ToString()))
             {
                 return Forbid();
             }
 
-            UserDto user;
+            UserResponseDto user;
 
             try
             {
-                user = _userService.UpdateUser(id, userDto);
+                user = _userService.UpdateUser(id, requestDto);
             }
             catch (ResourceNotFoundException e)
             {
@@ -116,7 +116,7 @@ namespace WebshopServer.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult VerifyUser([FromBody] VerifyDto verifyDto)
         {
-            UserDto user;
+            UserResponseDto user;
 
             try
             {

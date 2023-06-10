@@ -74,6 +74,27 @@ export const getUserInfo = createAsyncThunk(
   }
 );
 
+export const editProfile = createAsyncThunk(
+  "auth/edit",
+  async (userData, thunkAPI) => {
+    try {
+      const accessToken = thunkAPI.getState().auth.accessToken;
+      const userId = thunkAPI.getState().auth.userId;
+      return await authService.editProfile(accessToken, userId, userData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        // TODO - After adding error dtos remove next line
+        (error.response && error.response.data);
+      error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
   localStorage.removeItem("userId");
   localStorage.removeItem("accessToken");
@@ -144,6 +165,22 @@ export const authSlice = createSlice({
         state.userId = null;
         state.userInfo = null;
         state.accessToken = null;
+      })
+      .addCase(editProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(editProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Profile successfully edited!";
+
+        const responseDto = userResponseDto(action.payload);
+        state.userInfo = responseDto;
+      })
+      .addCase(editProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });

@@ -12,7 +12,9 @@ namespace WebshopServer.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserResponseDto>();
+            CreateMap<RegisterRequestDto, User>();
+            CreateMap<UserRequestDto, User>();
             CreateMap<Article, ArticleResponseDto>();
             CreateMap<Article, DeleteResponseDto>();
             CreateMap<ArticleRequestDto, Article>();

@@ -6,7 +6,7 @@ using WebshopServer.Enums;
 
 namespace WebshopServer.Dtos
 {
-    public class UserDto
+    public class UserResponseDto
     {
         public long Id { get; set; }
         public string Username { get; set; }

@@ -31,14 +31,14 @@ namespace WebshopServer.Services
             _mapper = mapper;
         }
 
-        public List<UserDto> GetAllUsers()
+        public List<UserResponseDto> GetAllUsers()
         {
-            return _mapper.Map<List<UserDto>>(_dbContext.Users.ToList());
+            return _mapper.Map<List<UserResponseDto>>(_dbContext.Users.ToList());
         }
 
-        public UserDto GetUserById(long id)
+        public UserResponseDto GetUserById(long id)
         {
-            UserDto user = _mapper.Map<UserDto>(_dbContext.Users.Find(id));
+            UserResponseDto user = _mapper.Map<UserResponseDto>(_dbContext.Users.Find(id));
 
             if (user == null)
             {
@@ -90,12 +90,12 @@ namespace WebshopServer.Services
             return responseDto;
         }
 
-        public UserDto RegisterUser(UserDto userDto)
+        public UserResponseDto RegisterUser(RegisterRequestDto requestDto)
         {
-            User user = _mapper.Map<User>(userDto);
+            User user = _mapper.Map<User>(requestDto);
 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password, BCrypt.Net.BCrypt.GenerateSalt());
-            user.VerificationStatus = userDto.Role == UserRole.Seller ? VerificationStatus.Pending : null;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt());
+            user.VerificationStatus = user.Role == UserRole.Seller ? VerificationStatus.Pending : null;
 
             _dbContext.Users.Add(user);
 
@@ -116,10 +116,10 @@ namespace WebshopServer.Services
                 throw;
             }
 
-            return _mapper.Map<UserDto>(user);
+            return _mapper.Map<UserResponseDto>(user);
         }
 
-        public UserDto UpdateUser(long id, UserDto userDto)
+        public UserResponseDto UpdateUser(long id, UserRequestDto requestDto)
         {
             User user = _dbContext.Users.Find(id);
 
@@ -128,18 +128,7 @@ namespace WebshopServer.Services
                 throw new ResourceNotFoundException("User with specified id doesn't exist!");
             }
 
-            user.Username = userDto.Username;
-            user.Email = userDto.Email;
-            user.FirstName = userDto.FirstName;
-            user.LastName = userDto.LastName;
-            user.Birthdate = userDto.Birthdate;
-            user.Address = userDto.Address;
-
-            // Hash new password only if it's different than the current one
-            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.Password))
-            {
-                user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password, BCrypt.Net.BCrypt.GenerateSalt());
-            }
+            _mapper.Map(requestDto, user);
 
             try
             {
@@ -158,10 +147,10 @@ namespace WebshopServer.Services
                 throw;
             }
 
-            return _mapper.Map<UserDto>(user);
+            return _mapper.Map<UserResponseDto>(user);
         }
 
-        public UserDto VerifyUser(VerifyDto verifyDto)
+        public UserResponseDto VerifyUser(VerifyDto verifyDto)
         {
             User user = _dbContext.Users.Find(verifyDto.UserId);
 
@@ -174,7 +163,7 @@ namespace WebshopServer.Services
 
             _dbContext.SaveChanges();
 
-            return _mapper.Map<UserDto>(user);
+            return _mapper.Map<UserResponseDto>(user);
         }
     }
 }

@@ -33,10 +33,27 @@ const getUserInfo = async (accessToken, userId) => {
   return res.data;
 };
 
+const editProfile = async (accessToken, userId, userDto) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const res = await axios.put(
+    `${process.env.REACT_APP_API_URL}/api/users/${userId}`,
+    userDto,
+    config
+  );
+
+  return res.data;
+};
+
 const authService = {
   registerUser,
   loginUser,
   getUserInfo,
+  editProfile,
 };
 
 export default authService;

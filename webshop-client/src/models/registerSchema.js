@@ -8,8 +8,8 @@ export const registerSchema = object({
   confirmPassword: string()
     .required("Password confirmation is required")
     .oneOf([ref("password")], "Passwords must match"),
-  firstName: string().required("First name if required"),
-  lastName: string().required("Last name if required"),
+  firstName: string().required("First name is required"),
+  lastName: string().required("Last name is required"),
   birthdate: date()
     .required("Birthdate is required")
     .max(new Date(), "Birthdate must be in the past"),
