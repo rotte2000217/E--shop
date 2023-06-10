@@ -8,6 +8,7 @@ import {
 } from "../../features/articles/articlesSlice";
 import { editProfile, authSlice } from "../../features/auth/authSlice";
 import { getOrders, ordersSlice } from "../../features/orders/ordersSlice";
+import { getUsers, usersSlice } from "../../features/users/usersSlice";
 import { UserRole } from "../../models/userRole";
 import SellerDashboard from "../../components/Layout/SellerDashboard";
 import BuyerDashboard from "../../components/Layout/BuyerDashboard";
@@ -47,6 +48,9 @@ const Dashboard = () => {
         case UserRole.Admin:
           dispatch(getOrders()).then((_) =>
             dispatch(ordersSlice.actions.resetState())
+          );
+          dispatch(getUsers()).then((_) =>
+            dispatch(usersSlice.actions.resetState())
           );
           break;
         default:

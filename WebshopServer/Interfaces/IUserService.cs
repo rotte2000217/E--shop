@@ -13,6 +13,6 @@ namespace WebshopServer.Interfaces
         UserResponseDto RegisterUser(RegisterRequestDto requestDto);
         UserResponseDto UpdateUser(long id, UserRequestDto requestDto);
         LoginResponseDto LoginUser(LoginRequestDto requestDto);
-        UserResponseDto VerifyUser(VerifyDto verifyDto);
+        VerificationResponseDto VerifyUser(long id, VerificationRequestDto requestDto);
     }
 }

@@ -15,6 +15,8 @@ namespace WebshopServer.Mapping
             CreateMap<User, UserResponseDto>();
             CreateMap<RegisterRequestDto, User>();
             CreateMap<UserRequestDto, User>();
+            CreateMap<User, VerificationResponseDto>();
+            CreateMap<VerificationRequestDto, User>();
             CreateMap<Article, ArticleResponseDto>();
             CreateMap<Article, DeleteResponseDto>();
             CreateMap<ArticleRequestDto, Article>();
