@@ -10,6 +10,7 @@ using WebshopServer.Exceptions;
 using WebshopServer.Infrastructure;
 using WebshopServer.Interfaces;
 using WebshopServer.Models;
+using WebshopServer.QueryParameters;
 
 namespace WebshopServer.Services
 {
@@ -24,9 +25,20 @@ namespace WebshopServer.Services
             _mapper = mapper;
         }
 
-        public List<OrderResponseDto> GetAllOrders()
+        public List<OrderResponseDto> GetAllOrders(OrderQueryParameters queryParameters)
         {
-            return _mapper.Map<List<OrderResponseDto>>(_dbContext.Orders.ToList());
+            List<Order> orders = new List<Order>();
+
+            if (queryParameters.BuyerId > 0)
+            {
+                orders = _dbContext.Orders.Where(x => x.BuyerId == queryParameters.BuyerId).ToList();
+            }
+            else
+            {
+                orders = _dbContext.Orders.ToList();
+            }
+
+            return _mapper.Map<List<OrderResponseDto>>(orders);
         }
 
         public OrderResponseDto GetOrderById(long id)

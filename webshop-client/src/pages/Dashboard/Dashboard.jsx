@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import UserDetails from "../../components/User/UserDetails";
 import { useSelector, useDispatch } from "react-redux";
-import { getArticles, resetState } from "../../features/articles/articlesSlice";
+import {
+  getArticles,
+  articlesSlice,
+} from "../../features/articles/articlesSlice";
+import { getOrders, ordersSlice } from "../../features/orders/ordersSlice";
 import { UserRole } from "../../models/userRole";
 import SellerDashboard from "../../components/Layout/SellerDashboard";
 
@@ -12,8 +16,21 @@ const Dashboard = () => {
   const { userId, userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (userInfo && userInfo.role === UserRole.Seller) {
-      dispatch(getArticles(userId)).then((_) => dispatch(resetState()));
+    if (userInfo) {
+      switch (userInfo.role) {
+        case UserRole.Buyer:
+          dispatch(getOrders(userId)).then((_) =>
+            dispatch(ordersSlice.actions.resetState())
+          );
+          break;
+        case UserRole.Seller:
+          dispatch(getArticles(userId)).then((_) =>
+            dispatch(articlesSlice.actions.resetState())
+          );
+          break;
+        default:
+          break;
+      }
     }
   }, [userInfo, userId, dispatch]);
 
