@@ -11,38 +11,38 @@ const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const authState = useSelector((state) => state.auth);
+  const { userInfo, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
-    if (authState.isError) {
-      notifyError(authState.message);
+    if (isError) {
+      notifyError(message);
     }
 
-    if (authState.isSuccess) {
-      notifySuccess(authState.message);
+    if (isSuccess) {
+      notifySuccess(message);
       navigate("/login");
     }
 
     dispatch(resetState());
-  }, [authState, navigate, dispatch]);
+  }, [userInfo, isError, isSuccess, message, navigate, dispatch]);
 
   const handleRegister = (data) => {
     const dto = registerRequestDto(data);
     dispatch(registerUser(dto));
   };
 
-  if (authState.isLoading) {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    );
-  }
-
   return (
     <div className="mb-5">
       <h1>Register</h1>
-      <RegisterForm handleRegister={handleRegister} />
+      {isLoading ? (
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      ) : (
+        <RegisterForm handleRegister={handleRegister} />
+      )}
     </div>
   );
 };
