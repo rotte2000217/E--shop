@@ -5,7 +5,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import "../../style/Utils.css";
 import UserItem from "./UserItem";
 
-const UserList = ({ users }) => {
+const UserList = ({ users, canVerify, handleSetVerify }) => {
   return (
     <>
       {users && users.length > 0 ? (
@@ -13,7 +13,11 @@ const UserList = ({ users }) => {
           <ListGroup variant="flush">
             {users.map((user) => (
               <ListGroup.Item key={user.id}>
-                <UserItem userData={user} />
+                <UserItem
+                  userData={user}
+                  canVerify={canVerify}
+                  handleSetVerify={handleSetVerify}
+                />
               </ListGroup.Item>
             ))}
           </ListGroup>

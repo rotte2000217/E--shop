@@ -1,8 +1,9 @@
 import React from "react";
 import { statusIdToName } from "../../models/verificationStatus";
 import "../../style/User.css";
+import { PencilSquare } from "react-bootstrap-icons";
 
-const UserItem = ({ userData }) => {
+const UserItem = ({ userData, canVerify, handleSetVerify }) => {
   return (
     <div className="user">
       <div className="user-photo">
@@ -26,6 +27,14 @@ const UserItem = ({ userData }) => {
       </div>
 
       <div className="user-right">
+        <div className="user-options">
+          {canVerify ? (
+            <PencilSquare
+              className="user-verify"
+              onClick={(e) => handleSetVerify(userData)}
+            />
+          ) : null}
+        </div>
         <div className={`user-status status-${userData.verificationStatus}`}>
           Status: {statusIdToName(userData.verificationStatus)}
         </div>

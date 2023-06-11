@@ -70,12 +70,17 @@
   align-items: center;
 }
 
+.user-verify {
+  color: orange;
+  cursor: pointer;
+}
+
 .status-0 {
   background-color: #eded37;
 }
 
 .status-1 {
-  background-color: #ea3a3a;
+  background-color: #f46565;
 }
 
 .status-2 {

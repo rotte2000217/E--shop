@@ -5,16 +5,15 @@ import { Formik } from "formik";
 import "../../style/Form.css";
 import { verificationSchema } from "../../models/verificationSchema";
 import {
-  VerificationStatus,
+  AllowedStatuses,
   statusIdToName,
-  statusNameToId,
 } from "../../models/verificationStatus";
 
-const VerificationForm = ({ handleSubmit, users }) => {
+const VerificationForm = ({ handleSubmit, userData }) => {
   return (
     <Formik
       initialValues={{
-        userId: "",
+        userId: userData ? userData.id : "",
         verificationStatus: "",
       }}
       validationSchema={verificationSchema}
@@ -32,33 +31,6 @@ const VerificationForm = ({ handleSubmit, users }) => {
         handleSubmit,
       }) => (
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="userId">
-            <Form.Label>User</Form.Label>
-            <Form.Select
-              name="userId"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.userId}
-              className={`border border-2 ${
-                touched.userId
-                  ? errors.userId
-                    ? "border-danger"
-                    : "border-success"
-                  : ""
-              }`}
-            >
-              <option value="">Select User</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.username} ({statusIdToName(user.verificationStatus)})
-                </option>
-              ))}
-            </Form.Select>
-            {errors.userId && touched.userId ? (
-              <div className="error-message">{errors.userId}</div>
-            ) : null}
-          </Form.Group>
-
           <Form.Group className="mb-3" controlId="verificationStatus">
             <Form.Label>Status</Form.Label>
             <Form.Select
@@ -75,12 +47,9 @@ const VerificationForm = ({ handleSubmit, users }) => {
               }`}
             >
               <option value="">Verify as</option>
-              {Object.keys(VerificationStatus).map((statusName) => (
-                <option
-                  key={statusNameToId(statusName)}
-                  value={statusNameToId(statusName)}
-                >
-                  {statusName}
+              {AllowedStatuses.map((statusId) => (
+                <option key={statusId} value={statusId}>
+                  {statusIdToName(statusId)}
                 </option>
               ))}
             </Form.Select>

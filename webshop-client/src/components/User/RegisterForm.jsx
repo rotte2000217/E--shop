@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import { Formik } from "formik";
 import "../../style/Form.css";
 import { registerSchema } from "../../models/registerSchema";
-import { AllowedRole } from "../../models/userRole";
+import { AllowedRoles, roleIdToName } from "../../models/userRole";
 
 const RegisterForm = ({ handleRegister }) => {
   return (
@@ -226,12 +226,9 @@ const RegisterForm = ({ handleRegister }) => {
               }`}
             >
               <option value="">Register as</option>
-              {Object.keys(AllowedRole).map((roleName) => (
-                <option
-                  key={AllowedRole[roleName]}
-                  value={AllowedRole[roleName]}
-                >
-                  {roleName}
+              {AllowedRoles.map((roleId) => (
+                <option key={roleId} value={roleId}>
+                  {roleIdToName(roleId)}
                 </option>
               ))}
             </Form.Select>
