@@ -40,9 +40,9 @@ export const verifyUser = createAsyncThunk(
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
-        // TODO - After adding error dtos remove next line
-        (error.response && error.response.data);
-      error.message || error.toString();
+        (error.response && error.response.data) ||
+        error.message ||
+        error.toString();
 
       return thunkAPI.rejectWithValue(message);
     }
