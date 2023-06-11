@@ -96,7 +96,7 @@ const Dashboard = () => {
   );
 
   return (
-    <>
+    <div style={{ marginBottom: "50px" }}>
       {userInfo.role === UserRole.Buyer ? (
         <BuyerDashboard>{profileComponent}</BuyerDashboard>
       ) : userInfo.role === UserRole.Seller ? (
@@ -110,7 +110,7 @@ const Dashboard = () => {
         handleClose={(e) => setShowModal(false)}
         handleConfirm={handleConfirmEdit}
       />
-    </>
+    </div>
   );
 };
 
