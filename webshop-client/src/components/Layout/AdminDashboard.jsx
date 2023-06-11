@@ -6,6 +6,7 @@ import { UserRole } from "../../models/userRole";
 import { verifyUser, resetState } from "../../features/users/usersSlice";
 import { verificationRequestDto } from "../../models/verificationDto";
 import { notifySuccess, notifyError } from "../../utils/notify";
+import UserList from "../User/UserList";
 
 const AdminDashboard = ({ children }) => {
   const dispatch = useDispatch();
@@ -45,6 +46,13 @@ const AdminDashboard = ({ children }) => {
       <div>
         <h3>All Orders</h3>
         <OrderList orders={orders} />
+      </div>
+      <hr />
+      <div>
+        <h3>Sellers</h3>
+        <UserList
+          users={users.filter((user) => user.role === UserRole.Seller)}
+        />
       </div>
       <hr />
       <div>
