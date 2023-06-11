@@ -2,17 +2,9 @@ import React from "react";
 import "../../style/Order.css";
 import moment from "moment";
 import { Trash } from "react-bootstrap-icons";
+import { getDeliveryTime } from "../../utils/orderUtils";
 
 const OrderItem = ({ orderData, canDelete, handleDelete }) => {
-  const getDeliveryTime = (order) => {
-    const deliveredAt = moment(order.createdAt).add(
-      order.deliveryTime,
-      "hours"
-    );
-
-    return deliveredAt;
-  };
-
   return (
     <div className="order">
       <div className="order-details">

@@ -12,6 +12,7 @@ import { articleRequestDto } from "../../models/articleDto";
 import { notifySuccess, notifyError } from "../../utils/notify";
 import ArticleModal from "../Articles/ArticleModal";
 import OrderList from "../Orders/OrderList";
+import { getDeliveryTime } from "../../utils/orderUtils";
 
 const SellerDashboard = ({ children }) => {
   const dispatch = useDispatch();
@@ -24,17 +25,12 @@ const SellerDashboard = ({ children }) => {
     (state) => state.articles
   );
 
-  const isPreviousOrder = (order) => {
-    const createdAt = new Date(order.createdAt);
-    const deliveryTime = order.deliveryTime;
-    const deliveredAt = new Date();
-    deliveredAt.setHours(createdAt.getHours() + deliveryTime);
-
-    return deliveredAt < new Date();
-  };
-
-  const previousOrders = orders.filter((order) => isPreviousOrder(order));
-  const newOrders = orders.filter((order) => !isPreviousOrder(order));
+  const previousOrders = orders.filter((order) =>
+    getDeliveryTime(order).isBefore()
+  );
+  const newOrders = orders.filter((order) =>
+    getDeliveryTime(order).isSameOrAfter()
+  );
 
   useEffect(() => {
     if (isError && message) {
