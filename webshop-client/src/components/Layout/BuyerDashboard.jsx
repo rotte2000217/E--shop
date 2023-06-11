@@ -59,24 +59,16 @@ const BuyerDashboard = ({ children }) => {
       <hr />
       <div>
         <h3>Active Orders</h3>
-        {activeOrders && activeOrders.length > 0 ? (
-          <OrderList
-            orders={activeOrders}
-            canDelete={true}
-            handleDelete={handleDelete}
-          />
-        ) : (
-          <p>No Active Orders</p>
-        )}
+        <OrderList
+          orders={activeOrders}
+          canDelete={true}
+          handleDelete={handleDelete}
+        />
       </div>
       <hr />
       <div>
         <h3>Previous Orders</h3>
-        {previousOrders && previousOrders.length > 0 ? (
-          <OrderList orders={previousOrders} />
-        ) : (
-          <p>No Previous Orders</p>
-        )}
+        <OrderList orders={previousOrders} />
       </div>
       <hr />
       <div>

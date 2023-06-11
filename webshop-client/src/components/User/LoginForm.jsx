@@ -4,7 +4,20 @@ import Button from "react-bootstrap/Button";
 import { Formik } from "formik";
 import { loginSchema } from "../../models/loginSchema";
 
+// import { useSelector } from "react-redux";
+// import Spinner from "react-bootstrap/Spinner";
+
 const LoginForm = ({ handleLogin }) => {
+  // const { isLoading } = useSelector((state) => state.auth);
+
+  // if (isLoading) {
+  //   return (
+  //     <Spinner animation="border" role="status">
+  //       <span className="visually-hidden">Loading...</span>
+  //     </Spinner>
+  //   );
+  // }
+
   return (
     <Formik
       initialValues={{
