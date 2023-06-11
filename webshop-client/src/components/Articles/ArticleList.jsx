@@ -2,6 +2,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import ArticleItem from "./ArticleItem";
+import "../../style/List.css";
 
 const ArticleList = ({
   articles,
@@ -11,21 +12,27 @@ const ArticleList = ({
   handleSetEdit,
 }) => {
   return (
-    <Card>
-      <ListGroup variant="flush">
-        {articles.map((article) => (
-          <ListGroup.Item key={article.id}>
-            <ArticleItem
-              articleData={article}
-              canDelete={canDelete}
-              handleDelete={handleDelete}
-              canEdit={canEdit}
-              handleSetEdit={handleSetEdit}
-            />
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
-    </Card>
+    <>
+      {articles && articles.length > 0 ? (
+        <Card>
+          <ListGroup variant="flush">
+            {articles.map((article) => (
+              <ListGroup.Item key={article.id}>
+                <ArticleItem
+                  articleData={article}
+                  canDelete={canDelete}
+                  handleDelete={handleDelete}
+                  canEdit={canEdit}
+                  handleSetEdit={handleSetEdit}
+                />
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Card>
+      ) : (
+        <p className="empty-list-message">No available articles</p>
+      )}
+    </>
   );
 };
 
