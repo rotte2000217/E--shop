@@ -13,6 +13,10 @@ import { notifySuccess, notifyError } from "../../utils/notify";
 import ArticleModal from "../Articles/ArticleModal";
 import OrderList from "../Orders/OrderList";
 import { getDeliveryTime } from "../../utils/orderUtils";
+import {
+  VerificationStatus,
+  statusIdToName,
+} from "../../models/verificationStatus";
 
 const SellerDashboard = ({ children }) => {
   const dispatch = useDispatch();
@@ -20,6 +24,7 @@ const SellerDashboard = ({ children }) => {
   const [edittingArticle, setEdittingArticle] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  const { userInfo } = useSelector((state) => state.auth);
   const { orders } = useSelector((state) => state.orders);
   const { articles, isSuccess, isLoading, isError, message } = useSelector(
     (state) => state.articles
@@ -102,7 +107,14 @@ const SellerDashboard = ({ children }) => {
       <hr />
       <div>
         <h3>Add Article</h3>
-        <ArticleForm handleSubmit={handleCreate} />
+        {userInfo.verificationStatus === VerificationStatus.Accepted ? (
+          <ArticleForm handleSubmit={handleCreate} />
+        ) : (
+          <p className="info-message">
+            Only accepted sellers can add new articles. Your current status:{" "}
+            {statusIdToName(userInfo.verificationStatus)}.
+          </p>
+        )}
       </div>
       <hr />
       <div>

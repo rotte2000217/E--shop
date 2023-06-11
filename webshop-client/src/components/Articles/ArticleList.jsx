@@ -2,7 +2,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import ArticleItem from "./ArticleItem";
-import "../../style/List.css";
+import "../../style/Utils.css";
 
 const ArticleList = ({
   articles,
@@ -30,7 +30,7 @@ const ArticleList = ({
           </ListGroup>
         </Card>
       ) : (
-        <p className="empty-list-message">No available articles</p>
+        <p className="info-message">No available articles</p>
       )}
     </>
   );

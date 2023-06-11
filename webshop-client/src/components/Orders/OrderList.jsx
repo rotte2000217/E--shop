@@ -2,7 +2,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import OrderItem from "./OrderItem";
-import "../../style/List.css";
+import "../../style/Utils.css";
 
 const OrderList = ({ orders, canDelete, handleDelete }) => {
   return (
@@ -22,7 +22,7 @@ const OrderList = ({ orders, canDelete, handleDelete }) => {
           </ListGroup>
         </Card>
       ) : (
-        <p className="empty-list-message">No available orders</p>
+        <p className="info-message">No available orders</p>
       )}
     </>
   );

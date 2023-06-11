@@ -1,10 +1,11 @@
 import React from "react";
+import "../../style/Utils.css";
 
 const Home = () => {
   return (
     <div className="text-center">
       <h1>Welcome to Webshop's Homepage</h1>
-      <p style={{ fontStyle: "italic" }}>nothing to see here...</p>
+      <p className="info-message">Nothing to see here...</p>
     </div>
   );
 };
