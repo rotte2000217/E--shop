@@ -9,6 +9,7 @@ import {
 } from "../../features/orders/ordersSlice";
 import { orderRequestDto } from "../../models/orderDto";
 import { notifySuccess, notifyError } from "../../utils/notify";
+import { getDeliveryTime } from "../../utils/orderUtils";
 
 const BuyerDashboard = ({ children }) => {
   const dispatch = useDispatch();
@@ -18,17 +19,12 @@ const BuyerDashboard = ({ children }) => {
     (state) => state.orders
   );
 
-  const isPreviousOrder = (order) => {
-    const createdAt = new Date(order.createdAt);
-    const deliveryTime = order.deliveryTime;
-    const deliveredAt = new Date();
-    deliveredAt.setHours(createdAt.getHours() + deliveryTime);
-
-    return deliveredAt < new Date();
-  };
-
-  const previousOrders = orders.filter((order) => isPreviousOrder(order));
-  const activeOrders = orders.filter((order) => !isPreviousOrder(order));
+  const previousOrders = orders.filter((order) =>
+    getDeliveryTime(order).isBefore()
+  );
+  const activeOrders = orders.filter((order) =>
+    getDeliveryTime(order).isSameOrAfter()
+  );
 
   useEffect(() => {
     if (isError && message) {

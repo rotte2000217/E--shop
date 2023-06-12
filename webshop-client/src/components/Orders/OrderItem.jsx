@@ -1,10 +1,12 @@
 import React from "react";
 import "../../style/Order.css";
-import moment from "moment";
 import { Trash } from "react-bootstrap-icons";
-import { getDeliveryTime } from "../../utils/orderUtils";
+import {
+  getDeliveryTime,
+  getFormattedTimeToDelivery,
+} from "../../utils/orderUtils";
 
-const OrderItem = ({ orderData, canDelete, handleDelete }) => {
+const OrderItem = ({ orderData, currentTime, canDelete, handleDelete }) => {
   return (
     <div className="order">
       <div className="order-details">
@@ -12,10 +14,16 @@ const OrderItem = ({ orderData, canDelete, handleDelete }) => {
           Order for Article (Id={orderData.articleId})
         </h5>
         <div className="order-delivery">
-          {getDeliveryTime(orderData) < moment() ? (
-            <>Delivered {getDeliveryTime(orderData).fromNow()}</>
+          {getDeliveryTime(orderData) < currentTime ? (
+            <>
+              Delivered {getDeliveryTime(orderData).from(currentTime)} to
+              address "{orderData.address}"
+            </>
           ) : (
-            <>Delivering {getDeliveryTime(orderData).fromNow()}</>
+            <>
+              Delivering in {getFormattedTimeToDelivery(orderData, currentTime)}{" "}
+              to address "{orderData.address}"
+            </>
           )}
         </div>
       </div>
